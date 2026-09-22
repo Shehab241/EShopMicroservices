@@ -1,0 +1,65 @@
+services:
+  catalogdb:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CatalogDb
+    volumes:
+      - postgres_catalog:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  basketdb:
+    image: postgres:17
+    
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: BasketDb
+    volumes:
+      - postgres_basket:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  distributedcache:
+    image: redis
+    
+  catalog.api:
+    image: ${DOCKER_REGISTRY-}catalogapi
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+  
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
+
+  discount.grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.Grpc/Dockerfile
+  orderdb:
+    image: mcr.microsoft.com/mssql/server  
+  messagebroker:
+    image: rabbitmq:management  
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
+  yarpapigateway:
+    image: ${DOCKER_REGISTRY-}yarpapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+
+volumes:
+  postgres_catalog:
+  postgres_basket:
+
+
+

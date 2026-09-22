@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "eshop-microservices.AppHost/eshop-microservices.AppHost.csproj"
+  }
+}
